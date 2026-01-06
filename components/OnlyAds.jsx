@@ -31,7 +31,9 @@ import {
   Check,
   Coins,
   Pen,
-  Square // Added Square import for single view toggle
+  Square,
+  Scale,
+  Mail
 } from 'lucide-react';
 
 // ==========================================
@@ -119,6 +121,8 @@ export default function OnlyAds() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false); 
   const [showSupportModal, setShowSupportModal] = useState(false); 
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false); // NEW
+  const [showTermsModal, setShowTermsModal] = useState(false);     // NEW
   const [loading, setLoading] = useState(true);
   
   const [showCookieModal, setShowCookieModal] = useState(false);
@@ -130,12 +134,9 @@ export default function OnlyAds() {
   const [isCopied, setIsCopied] = useState(false);
   const cardRef = useRef(null);
   
-  // Ref for the caption textarea to handle auto-resize and focus
   const captionInputRef = useRef(null);
 
-  // New State for Share View Mode (Grid vs Single)
-  const [shareViewMode, setShareViewMode] = useState('grid'); // 'grid' | 'single'
-
+  const [shareViewMode, setShareViewMode] = useState('grid');
   const [activeSlot, setActiveSlot] = useState(null);
   
   const [systemInfo, setSystemInfo] = useState({
@@ -337,8 +338,6 @@ export default function OnlyAds() {
                         clonedCard.style.maxWidth = '400px';
                         clonedCard.style.margin = '0 auto';
                         clonedCard.style.borderRadius = '0';
-                        clonedCard.style.height = 'auto'; 
-                        clonedCard.style.minHeight = 'auto';
                     }
 
                     const allText = clonedCard.querySelectorAll('span, p, h1, h2, h3, h4, h5, h6');
@@ -519,17 +518,24 @@ export default function OnlyAds() {
           ))}
         </div>
 
-        {/* --- FOOTER CONTENT --- */}
+        {/* --- FOOTER CONTENT WITH LEGAL LINKS --- */}
         <div className="mt-16 border-t border-neutral-900 pt-8 pb-12">
-            <div className="text-center sm:text-left">
-              <h1 className="text-xs font-bold text-green-500 uppercase tracking-widest mb-2">
-                 Browsing is broadcasting
-              </h1>
-              <p className="text-neutral-500 text-[10px] font-mono max-w-lg leading-relaxed">
-                Interact with live ad slots to reveal the real-time browser fingerprinting data advertisers use to target you. 
-                Your digital silhouette is being auctioned in milliseconds based on your device, location, and behavior. 
-                We just make the invisible visible.
-              </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h1 className="text-xs font-bold text-green-500 uppercase tracking-widest mb-2">
+                   Browsing is broadcasting
+                </h1>
+                <p className="text-neutral-500 text-[10px] font-mono max-w-lg leading-relaxed">
+                  Interact with live ad slots to reveal the real-time browser fingerprinting data advertisers use to target you. 
+                  Your digital silhouette is being auctioned in milliseconds based on your device, location, and behavior. 
+                  We just make the invisible visible.
+                </p>
+              </div>
+              <div className="flex flex-col md:items-end gap-2 text-xs font-mono text-neutral-500">
+                 <button onClick={() => setShowPrivacyModal(true)} className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Privacy Protocols</button>
+                 <button onClick={() => setShowTermsModal(true)} className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Terms of Engagement</button>
+                 <a href="mailto:contact@onlyads.me" className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Contact Admin</a>
+              </div>
             </div>
         </div>
       </main>
@@ -587,7 +593,123 @@ export default function OnlyAds() {
           </button>
       </div>
 
-      {/* --- SUPPORT / FUND PROTOCOL MODAL --- */}
+      {/* --- ABOUT / MANIFESTO MODAL --- */}
+      {showAboutModal && (
+        <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-full max-w-2xl bg-neutral-900 border border-neutral-800 p-0 rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+             <div className="p-4 border-b border-neutral-800 bg-black flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                   <FileText size="18" className="text-purple-500" />
+                   <h2 className="text-sm font-bold text-white uppercase tracking-widest">System Manifesto</h2>
+                </div>
+                <button 
+                  onClick={() => setShowAboutModal(false)}
+                  className="text-neutral-500 hover:text-white transition-colors"
+                >
+                  <X size="20" />
+                </button>
+             </div>
+
+             <div className="p-6 overflow-y-auto space-y-8 text-sm text-neutral-300 font-mono leading-relaxed">
+                {/* Intro */}
+                <section>
+                   <h3 className="text-white font-bold uppercase mb-3 text-base">The Algorithmic Mirror</h3>
+                   <p className="mb-3">
+                     OnlyAds is not a standard website. It is a live, satirical exploration of the modern <strong>surveillance economy</strong>. 
+                     In the current internet ecosystem, you are not the user; you are the product. 
+                     Every click, hover, and scroll is measured, auctioned, and sold in milliseconds.
+                   </p>
+                   <p>
+                     This project exists to strip away the "content" and reveal the raw machinery of <strong>AdTech</strong>. We show you the ads, the tracking pixels, 
+                     and the algorithmic assumptions made about your identity based on your <strong>digital footprint</strong>.
+                   </p>
+                </section>
+
+                {/* Technical SEO Section */}
+                <section>
+                   <h3 className="text-white font-bold uppercase mb-3 text-base">How The Machine Works</h3>
+                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                       <div className="bg-black/40 p-3 rounded border border-neutral-800">
+                          <strong className="text-green-500 block mb-1">Real-Time Bidding (RTB)</strong>
+                          <span className="text-xs text-neutral-400">When you load this page, your browser sends a "bid request" to Ad Exchanges (like Google AdSense). Thousands of advertisers bid on your attention instantly.</span>
+                       </div>
+                       <div className="bg-black/40 p-3 rounded border border-neutral-800">
+                          <strong className="text-green-500 block mb-1">Browser Fingerprinting</strong>
+                          <span className="text-xs text-neutral-400">Advertisers analyze your User Agent, screen resolution, battery level, and installed fonts to create a unique ID for you, even without cookies.</span>
+                       </div>
+                       <div className="bg-black/40 p-3 rounded border border-neutral-800">
+                          <strong className="text-green-500 block mb-1">Behavioral Surplus</strong>
+                          <span className="text-xs text-neutral-400">Your past actions—searches, clicks, dwell time—are aggregated to predict your future purchases. This prediction data is the core product of the modern web.</span>
+                       </div>
+                       <div className="bg-black/40 p-3 rounded border border-neutral-800">
+                          <strong className="text-green-500 block mb-1">The Auction</strong>
+                          <span className="text-xs text-neutral-400">In less than 200ms, the highest bidder wins the right to display their image in the slots you see here. It is a hyper-speed capitalistic contest.</span>
+                       </div>
+                   </div>
+                </section>
+
+                {/* Mission */}
+                <section>
+                   <h3 className="text-white font-bold uppercase mb-3 text-base">Our Mission</h3>
+                   <p>
+                     To visualize the invisible. By actively engaging with this feed, you are participating in a live performance of the <strong>attention economy</strong>.
+                     Most websites hide their tracking mechanisms behind flashy UI and "free" content. We do the opposite. We present the advertising infrastructure as the art itself.
+                   </p>
+                </section>
+
+                {/* Privacy Block */}
+                <section className="bg-black/50 p-4 rounded border border-neutral-800">
+                   <div className="flex items-center gap-2 mb-2">
+                      <ShieldAlert size="14" className="text-green-500" />
+                      <h3 className="text-xs text-neutral-500 font-bold uppercase">Privacy & Data Use</h3>
+                   </div>
+                   <p className="text-xs text-neutral-500">
+                     This site uses standard <strong>Google AdSense</strong> protocols. We do not store your personal data on our own servers. 
+                     All targeting is handled by external ad networks based on your existing digital footprint. 
+                     By using this site, you acknowledge you are part of the open web's data exchange.
+                   </p>
+                </section>
+             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 2. PRIVACY POLICY */}
+      {showPrivacyModal && (
+        <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-neutral-900 border border-neutral-800 p-0 rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+             <div className="p-4 border-b border-neutral-800 bg-black flex justify-between items-center">
+                <div className="flex items-center gap-2"><ShieldAlert size="18" className="text-blue-500" /><h2 className="text-sm font-bold text-white uppercase tracking-widest">Privacy Protocols</h2></div>
+                <button onClick={() => setShowPrivacyModal(false)} className="text-neutral-500 hover:text-white transition-colors"><X size="20" /></button>
+             </div>
+             <div className="p-6 overflow-y-auto text-xs text-neutral-400 font-mono leading-relaxed space-y-4">
+                <p><strong>1. DATA COLLECTION:</strong> We use Google AdSense to serve ads. Google may use cookies to personalize ads based on your prior visits to this website or other websites.</p>
+                <p><strong>2. COOKIES:</strong> By accessing OnlyAds, you agree to use cookies in agreement with the OnlyAds's Privacy Policy.</p>
+                <p><strong>3. THIRD PARTY VENDORS:</strong> Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to your website or other websites.</p>
+                <p><strong>4. OPT OUT:</strong> Users may opt out of personalized advertising by visiting Ads Settings.</p>
+             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 3. TERMS OF SERVICE */}
+      {showTermsModal && (
+        <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="w-full max-w-lg bg-neutral-900 border border-neutral-800 p-0 rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
+             <div className="p-4 border-b border-neutral-800 bg-black flex justify-between items-center">
+                <div className="flex items-center gap-2"><Scale size="18" className="text-red-500" /><h2 className="text-sm font-bold text-white uppercase tracking-widest">Terms of Engagement</h2></div>
+                <button onClick={() => setShowTermsModal(false)} className="text-neutral-500 hover:text-white transition-colors"><X size="20" /></button>
+             </div>
+             <div className="p-6 overflow-y-auto text-xs text-neutral-400 font-mono leading-relaxed space-y-4">
+                <p><strong>1. ACCEPTANCE:</strong> By accessing this website we assume you accept these terms and conditions.</p>
+                <p><strong>2. LICENSE:</strong> Unless otherwise stated, OnlyAds and/or its licensors own the intellectual property rights for all material on OnlyAds.</p>
+                <p><strong>3. USER DATA:</strong> This site is a satirical art project visualizing public data broadcasting. We do not store personal data.</p>
+             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 4. SUPPORT / FUND PROTOCOL MODAL */}
       {showSupportModal && (
         <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200">
           <div className="w-full max-w-sm bg-neutral-900 border border-neutral-800 p-0 rounded-xl shadow-2xl relative overflow-hidden">
@@ -646,72 +768,6 @@ export default function OnlyAds() {
                         <span>Global (PayPal)</span>
                     </a>
                 </div>
-             </div>
-          </div>
-        </div>
-      )}
-
-      {/* --- ABOUT / MANIFESTO MODAL --- */}
-      {showAboutModal && (
-        <div className="fixed inset-0 z-[130] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-in fade-in duration-200">
-          <div className="w-full max-w-lg bg-neutral-900 border border-neutral-800 p-0 rounded-xl shadow-2xl relative overflow-hidden flex flex-col max-h-[90vh]">
-             <div className="p-4 border-b border-neutral-800 bg-black flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                   <FileText size="18" className="text-purple-500" />
-                   <h2 className="text-sm font-bold text-white uppercase tracking-widest">System Manifesto</h2>
-                </div>
-                <button 
-                  onClick={() => setShowAboutModal(false)}
-                  className="text-neutral-500 hover:text-white transition-colors"
-                >
-                  <X size="20" />
-                </button>
-             </div>
-
-             <div className="p-6 overflow-y-auto space-y-6 text-sm text-neutral-300 font-mono leading-relaxed">
-                <section>
-                   <h3 className="text-white font-bold uppercase mb-2">The Algorithmic Mirror</h3>
-                   <p>
-                     OnlyAds is not a standard website. It is an artistic exploration of the modern surveillance economy. 
-                     In the current internet ecosystem, you are not the user; you are the product. 
-                     Every click, hover, and scroll is measured, auctioned, and sold in milliseconds.
-                   </p>
-                </section>
-
-                <section>
-                   <h3 className="text-white font-bold uppercase mb-2">How It Works (The Machine)</h3>
-                   <ul className="list-disc pl-4 space-y-2 text-neutral-400">
-                      <li>
-                        <strong className="text-green-500">Real-Time Bidding (RTB):</strong> When you load this page, your browser sends a "bid request" to Google's Ad Exchange.
-                      </li>
-                      <li>
-                         <strong className="text-green-500">Digital Fingerprinting:</strong> Advertisers analyze your device (User Agent), location (IP), and behavior (Cookies) to decide your value.
-                      </li>
-                      <li>
-                         <strong className="text-green-500">The Auction:</strong> In less than 200ms, algorithms bid for the right to show you an image. The winner appears in the slots you see here.
-                      </li>
-                   </ul>
-                </section>
-
-                <section>
-                   <h3 className="text-white font-bold uppercase mb-2">Our Mission</h3>
-                   <p>
-                     To visualize the invisible. By actively engaging with this feed, you are participating in a live performance of the attention economy.
-                     We strip away the "content" to reveal the raw machinery of the ad-supported web.
-                   </p>
-                </section>
-
-                <section className="bg-black/50 p-4 rounded border border-neutral-800">
-                   <div className="flex items-center gap-2 mb-2">
-                      <ShieldAlert size="14" className="text-green-500" />
-                      <h3 className="text-xs text-neutral-500 font-bold uppercase">Privacy & Data Use</h3>
-                   </div>
-                   <p className="text-xs text-neutral-500">
-                     This site uses standard Google AdSense protocols. We do not store your personal data on our own servers. 
-                     All targeting is handled by external ad networks based on your existing digital footprint. 
-                     By using this site, you acknowledge you are part of the open web's data exchange.
-                   </p>
-                </section>
              </div>
           </div>
         </div>
@@ -786,7 +842,7 @@ export default function OnlyAds() {
                     </div>
                   </div>
 
-                  {/* Visual Ad Grid or Single Slot */}
+                  {/* Visual Ad Grid */}
                   {shareViewMode === 'grid' ? (
                     <div className="flex flex-wrap relative z-10 -mx-1">
                         {adSlots.slice(0, 4).map(slot => (

@@ -39,8 +39,8 @@ import {
 // ==========================================
 // 🚨 CRITICAL: UPDATE THESE CONFIGURATIONS
 // ==========================================
-const GOOGLE_AD_CLIENT = "ca-pub-4692687025606791";  // 1. Your AdSense Publisher ID
-const GOOGLE_AD_SLOT = "6463440686";                 // 2. Your Ad Unit Slot ID
+const GOOGLE_AD_CLIENT = "ca-pub-4692687025606791";  // <--- Updated Publisher ID
+const GOOGLE_AD_SLOT = "6463440686";                 // <--- Updated Slot ID
 
 // 💰 PAYMENT CONFIGURATION
 const UPI_ID = "onlyads@pthdfc";       
@@ -90,12 +90,17 @@ const IndiaFlag = ({ className }) => (
 );
 
 // --- INTERNAL COMPONENT: AD UNIT ---
+// Handles the safe loading of Google Ads within React
 const AdUnit = ({ id, format }) => {
   useEffect(() => {
     try {
+      // Safely push to the AdSense array
       const adsbygoogle = window.adsbygoogle || [];
       adsbygoogle.push({});
-    } catch (e) {}
+    } catch (e) {
+      // In development, this might error if adblock is on, which is fine
+      // console.error("AdSense Error:", e); 
+    }
   }, []);
 
   return (
@@ -108,6 +113,8 @@ const AdUnit = ({ id, format }) => {
              data-ad-format="auto" 
              data-full-width-responsive="true"
         ></ins>
+        
+        {/* Fallback visual if ad is slow to load */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-20">
             <div className="text-center">
                 <span className="text-[10px] font-mono text-neutral-600 block">AD_SLOT_{id}</span>
@@ -122,8 +129,8 @@ export default function OnlyAds() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false); 
   const [showSupportModal, setShowSupportModal] = useState(false); 
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false); 
-  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false); // NEW
+  const [showTermsModal, setShowTermsModal] = useState(false);     // NEW
   const [loading, setLoading] = useState(true);
   
   const [showCookieModal, setShowCookieModal] = useState(false);
@@ -153,6 +160,7 @@ export default function OnlyAds() {
     dataUsed: '0 KB'
   });
 
+  // Generate dynamic slots with mixed layouts
   const adSlots = useMemo(() => {
     const layouts = ['portrait', 'portrait', 'square', 'landscape', 'portrait'];
     return Array.from({ length: 12 }, (_, i) => {
@@ -164,11 +172,16 @@ export default function OnlyAds() {
     });
   }, []);
 
+  // Helper to get classes based on slot type for MAIN GRID
   const getSlotDimensions = (type) => {
       switch (type) {
-          case 'landscape': return 'md:col-span-2 aspect-[16/9]'; 
-          case 'square': return 'col-span-1 aspect-square';    
-          case 'portrait': default: return 'col-span-1 aspect-[4/5]';     
+          case 'landscape':
+              return 'md:col-span-2 aspect-[16/9]'; 
+          case 'square':
+              return 'col-span-1 aspect-square';    
+          case 'portrait':
+          default:
+              return 'col-span-1 aspect-[4/5]';     
       }
   };
 
@@ -287,10 +300,12 @@ export default function OnlyAds() {
   const handleCopyUPI = () => {
       const textArea = document.createElement("textarea");
       textArea.value = UPI_ID;
+      
       textArea.style.position = "fixed";
       textArea.style.left = "-9999px";
       textArea.style.top = "0";
       document.body.appendChild(textArea);
+      
       textArea.focus();
       textArea.select();
       
@@ -306,6 +321,7 @@ export default function OnlyAds() {
         console.error("Copy failed", err);
         alert(`Could not auto-copy. UPI ID: ${UPI_ID}`);
       }
+      
       document.body.removeChild(textArea);
   };
 
@@ -533,8 +549,8 @@ export default function OnlyAds() {
                 </p>
               </div>
               <div className="flex flex-col md:items-end gap-2 text-xs font-mono text-neutral-500">
-                 {/* Replaced Link with Button to trigger Modal */}
-                 <button onClick={() => setShowPrivacyModal(true)} className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Privacy Protocols</button>
+                 {/* Replaced Modal with Actual Link */}
+                 <a href="/privacy.html" className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Privacy Protocols</a>
                  
                  <button onClick={() => setShowTermsModal(true)} className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Terms of Engagement</button>
                  <a href="mailto:onlyads.me@rediffmail.com" className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Contact</a>

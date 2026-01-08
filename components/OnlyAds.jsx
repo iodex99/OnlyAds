@@ -100,15 +100,7 @@ const AdUnit = ({ id, format }) => {
 
   return (
     <div className="w-full h-full bg-black relative flex items-center justify-center overflow-hidden">
-        {/* Placeholder for AdSense (In production this renders the ad) */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-20">
-            <div className="text-center">
-                <span className="text-[10px] font-mono text-neutral-600 block">AD_SLOT_{id}</span>
-                <span className="text-[8px] font-mono text-neutral-700 uppercase">{format}</span>
-            </div>
-        </div>
-        
-        {/* Actual Ad Tag */}
+        {/* The Actual AdSense Tag */}
         <ins className="adsbygoogle"
              style={{ display: 'block', width: '100%', height: '100%' }}
              data-ad-client={GOOGLE_AD_CLIENT}
@@ -116,6 +108,12 @@ const AdUnit = ({ id, format }) => {
              data-ad-format="auto" 
              data-full-width-responsive="true"
         ></ins>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0 opacity-20">
+            <div className="text-center">
+                <span className="text-[10px] font-mono text-neutral-600 block">AD_SLOT_{id}</span>
+                <span className="text-[8px] font-mono text-neutral-700 uppercase">{format}</span>
+            </div>
+        </div>
     </div>
   );
 };
@@ -124,7 +122,7 @@ export default function OnlyAds() {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showAboutModal, setShowAboutModal] = useState(false); 
   const [showSupportModal, setShowSupportModal] = useState(false); 
-  const [showPrivacyModal, setShowPrivacyModal] = useState(false); // Used for fallback if file doesn't load
+  const [showPrivacyModal, setShowPrivacyModal] = useState(false); 
   const [showTermsModal, setShowTermsModal] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -355,10 +353,7 @@ export default function OnlyAds() {
                     if (clonedTextarea) {
                         const div = clonedDoc.createElement('div');
                         div.innerText = currentCaption; 
-                        
-                        // SMALLER FONT SIZE as requested (text-xl instead of 4xl)
                         div.className = "w-full bg-transparent border-none text-center text-xl sm:text-2xl font-black uppercase text-white leading-tight tracking-tighter drop-shadow-xl";
-                        
                         div.style.whiteSpace = 'pre-wrap'; 
                         div.style.wordWrap = 'break-word'; 
                         div.style.overflow = 'visible';
@@ -538,11 +533,10 @@ export default function OnlyAds() {
                 </p>
               </div>
               <div className="flex flex-col md:items-end gap-2 text-xs font-mono text-neutral-500">
-                 {/* Replaced Modal with Actual Link */}
-                 <a href="/privacy.html" className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Privacy Protocols</a>
+                 {/* Replaced Link with Button to trigger Modal */}
+                 <button onClick={() => setShowPrivacyModal(true)} className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Privacy Protocols</button>
                  
                  <button onClick={() => setShowTermsModal(true)} className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Terms of Engagement</button>
-                 {/* UPDATED: Contact email */}
                  <a href="mailto:onlyads.me@rediffmail.com" className="hover:text-green-500 transition-colors uppercase tracking-widest text-left md:text-right">Contact</a>
               </div>
             </div>

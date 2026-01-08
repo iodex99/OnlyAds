@@ -39,8 +39,8 @@ import {
 // ==========================================
 // 🚨 CRITICAL: UPDATE THESE CONFIGURATIONS
 // ==========================================
-const GOOGLE_AD_CLIENT = "ca-pub-XXXXXXXXXXXXXXXX";  // 1. Your AdSense Publisher ID
-const GOOGLE_AD_SLOT = "1234567890";                 // 2. Your Ad Unit Slot ID
+const GOOGLE_AD_CLIENT = "ca-pub-4692687025606791";  // 1. Your AdSense Publisher ID
+const GOOGLE_AD_SLOT = "6463440686";                 // 2. Your Ad Unit Slot ID
 
 // 💰 PAYMENT CONFIGURATION
 const UPI_ID = "onlyads@pthdfc";       
